@@ -1,0 +1,43 @@
+package com.global.solution.api.analysis;
+
+import com.global.solution.api.resume.Resume;
+import com.global.solution.api.user.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "job_analysis")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class JobAnalysis {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "job_analysis_seq_generator")
+    @SequenceGenerator(name = "job_analysis_seq_generator", sequenceName = "job_analysis_seq", allocationSize = 1)
+    private Long id;
+
+    private String jobTitle;
+
+    private String jobDescription;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_resume")
+    private Resume resume;
+
+}
