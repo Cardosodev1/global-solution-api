@@ -2,21 +2,25 @@ package com.global.solution.api.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "gs_users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@EqualsAndHashCode(of = "id")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
@@ -33,19 +37,50 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    public User(UserSaveDTO dto) {
-        this.name = dto.name();
-        this.email = dto.email();
-        this.password = dto.password();
-    }
-
-    public void update(@Valid UserUpdateDTO dto) {
-        if (dto.name() != null) {
-            this.name = dto.name();
+    public void update(@Valid UserUpdateRQ request, PasswordEncoder passwordEncoder) {
+        if (request.name() != null) {
+            this.name = request.name();
         }
-        if (dto.email() != null) {
-            this.email = dto.email();
+        if (request.email() != null) {
+            this.email = request.email();
+        }
+        if (request.password() != null) {
+            this.password = passwordEncoder.encode(request.password());
         }
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

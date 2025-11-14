@@ -1,10 +1,10 @@
-package com.global.solution.api.user;
+package com.global.solution.api.security;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record UserSaveDTO(
+public record RegisterRQ(
 
         @NotNull
         @NotBlank
