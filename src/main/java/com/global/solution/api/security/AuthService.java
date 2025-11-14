@@ -1,8 +1,9 @@
 package com.global.solution.api.security;
 
+import com.global.solution.api.exception.EmailAlreadyExistsException;
 import com.global.solution.api.user.User;
 import com.global.solution.api.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,19 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired
-    UserRepository repository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    TokenService tokenService;
-
-    @Autowired
-    AuthenticationManager authManager;
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
+    private final AuthenticationManager authManager;
 
     public LoginRegisterRS login(LoginRQ loginRQ) {
         var userPass = new UsernamePasswordAuthenticationToken(loginRQ.email(), loginRQ.password());
@@ -35,12 +30,10 @@ public class AuthService {
     @Transactional
     public LoginRegisterRS register(RegisterRQ registerRQ) {
         if (this.repository.findByEmail(registerRQ.email()).isPresent()) {
-            throw new RuntimeException("Usuário já existe");
+            throw new EmailAlreadyExistsException("Usuário já existe");
         }
-        User user = new User();
-        user.setPassword(passwordEncoder.encode(registerRQ.password()));
-        user.setEmail(registerRQ.email());
-        user.setName(registerRQ.name());
+        String encodedPass = passwordEncoder.encode(registerRQ.password());
+        User user = new User(registerRQ.name(), registerRQ.email(), encodedPass);
         this.repository.save(user);
         String token = this.tokenService.generateToken(user);
         return new LoginRegisterRS(user.getId(), user.getName(), token);
