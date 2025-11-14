@@ -3,20 +3,18 @@ package com.global.solution.api.analysis;
 import com.global.solution.api.resume.Resume;
 import com.global.solution.api.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "job_analysis")
+@Table(name = "gs_job_analysis")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class JobAnalysis {
 
     @Id

@@ -2,17 +2,15 @@ package com.global.solution.api.resume;
 
 import com.global.solution.api.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Table(name = "resumes")
+@Table(name = "gs_resumes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Resume {
 
     @Id
