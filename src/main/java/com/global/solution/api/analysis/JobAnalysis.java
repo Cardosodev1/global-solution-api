@@ -3,17 +3,18 @@ package com.global.solution.api.analysis;
 import com.global.solution.api.resume.Resume;
 import com.global.solution.api.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "gs_job_analysis")
+@Table(name = "gs_job_analyses")
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class JobAnalysis {
 
@@ -22,8 +23,12 @@ public class JobAnalysis {
     @SequenceGenerator(name = "job_analysis_seq_generator", sequenceName = "job_analysis_seq", allocationSize = 1)
     private Long id;
 
+    @Column(nullable = false)
+    @NotBlank
     private String jobTitle;
 
+    @Column(nullable = false)
+    @NotBlank
     private String jobDescription;
 
     @CreationTimestamp
@@ -37,5 +42,8 @@ public class JobAnalysis {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_resume")
     private Resume resume;
+
+    @OneToMany(mappedBy = "jobAnalysis", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<AnalysisResult> analysisResults = new HashSet<>();
 
 }

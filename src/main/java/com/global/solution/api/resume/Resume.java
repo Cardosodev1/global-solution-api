@@ -34,7 +34,7 @@ public class Resume {
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "resumes_skills", joinColumns = @JoinColumn(name = "id_resumes"), inverseJoinColumns = @JoinColumn(name = "id_skills"))
+    @JoinTable(name = "gs_resumes_skills", joinColumns = @JoinColumn(name = "id_resume"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
     private Set<Skill> skills = new HashSet<>();
 
     public Resume(String title, String description, User user) {

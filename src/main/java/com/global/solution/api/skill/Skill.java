@@ -1,5 +1,6 @@
 package com.global.solution.api.skill;
 
+import com.global.solution.api.analysis.AnalysisResult;
 import com.global.solution.api.resume.Resume;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -16,8 +17,8 @@ import java.util.Set;
 public class Skill {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "skills_seq_generator")
-    @SequenceGenerator(name = "skills_seq_generator", sequenceName = "skills_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "skill_seq_generator")
+    @SequenceGenerator(name = "skill_seq_generator", sequenceName = "skill_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)
@@ -25,7 +26,14 @@ public class Skill {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<LearningResource> learningResources = new HashSet<>();
+
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<AnalysisResult> analysisResults = new HashSet<>();
 
     @ManyToMany(mappedBy = "skills")
     private Set<Resume> resumes =  new HashSet<>();

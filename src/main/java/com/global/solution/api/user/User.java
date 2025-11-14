@@ -1,5 +1,7 @@
 package com.global.solution.api.user;
 
+import com.global.solution.api.analysis.JobAnalysis;
+import com.global.solution.api.resume.Resume;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -13,7 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "gs_users")
@@ -42,6 +46,12 @@ public class User implements UserDetails {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Resume> resumes = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<JobAnalysis> jobAnalyses = new HashSet<>();
 
     public User(String name, String email, String encodedPass) {
         this.name = name;
