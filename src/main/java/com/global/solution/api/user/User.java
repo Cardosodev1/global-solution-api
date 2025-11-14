@@ -2,6 +2,8 @@ package com.global.solution.api.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,9 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "gs_users")
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class User implements UserDetails {
 
@@ -27,15 +27,27 @@ public class User implements UserDetails {
     @SequenceGenerator(name = "user_seq_generator", sequenceName = "user_seq", allocationSize = 1)
     private Long id;
 
+    @Column(nullable = false)
+    @NotBlank
     private String name;
 
+    @Column(nullable = false, unique = true)
+    @Email
     private String email;
 
+    @Column(nullable = false)
+    @NotBlank
     private String password;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    public User(String name, String email, String encodedPass) {
+        this.name = name;
+        this.email = email;
+        this.password = encodedPass;
+    }
 
     public void update(@Valid UserUpdateRQ request, PasswordEncoder passwordEncoder) {
         if (request.name() != null) {
