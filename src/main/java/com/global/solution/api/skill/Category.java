@@ -1,0 +1,25 @@
+package com.global.solution.api.skill;
+
+public enum Category {
+
+    PROGRAMMING_LANGUAGE,
+    FRAMEWORK,
+    LIBRARY,
+    DATABASE,
+    TOOL,
+    CLOUD_PLATFORM,
+    CLOUD_SERVICE,
+    OPERATING_SYSTEM,
+    DATA_SCIENCE,
+    TESTING,
+    SECURITY,
+    ARCHITECTURE,
+    METHODOLOGY,
+    PROJECT_MANAGEMENT,
+    SOFT_SKILL,
+    LANGUAGE,
+    BUSINESS_SKILL,
+    CERTIFICATION,
+    HARD_SKILL
+
+}
