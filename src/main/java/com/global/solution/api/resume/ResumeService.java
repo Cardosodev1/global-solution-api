@@ -1,5 +1,7 @@
 package com.global.solution.api.resume;
 
+import com.global.solution.api.client.SkillApiClient;
+import com.global.solution.api.client.rqrs.SkillExtractRS;
 import com.global.solution.api.exception.ResourceNotFoundException;
 import com.global.solution.api.skill.Skill;
 import com.global.solution.api.skill.SkillRepository;
@@ -19,6 +21,7 @@ public class ResumeService {
 
     private final ResumeRepository resumeRepository;
     private final SkillRepository skillRepository;
+    private final SkillApiClient  skillApiClient;
 
     @Transactional
     public ResumeRS createResume(ResumeRQ resumeRQ, User user) {
@@ -66,7 +69,8 @@ public class ResumeService {
     }
 
     private Set<Skill> findSkillsFromAI(String textForAnalysis) {
-        List<String> skillNamesFromAI = null; // fazer a requisição para a IA aqui
+        SkillExtractRS skillExtractRS = skillApiClient.extractSkills(textForAnalysis);
+        List<String> skillNamesFromAI = skillExtractRS.getSkills();
         if (skillNamesFromAI == null || skillNamesFromAI.isEmpty()) {
             System.out.println("IA não retornou skills.");
             return Set.of();
