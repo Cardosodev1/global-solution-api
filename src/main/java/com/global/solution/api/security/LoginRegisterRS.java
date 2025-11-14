@@ -1,4 +1,4 @@
 package com.global.solution.api.security;
 
-public record LoginRegisterRS(String name, String token) {
+public record LoginRegisterRS(Long id, String name, String token) {
 }

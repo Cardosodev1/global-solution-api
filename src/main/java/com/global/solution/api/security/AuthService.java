@@ -27,8 +27,9 @@ public class AuthService {
     public LoginRegisterRS login(LoginRQ loginRQ) {
         var userPass = new UsernamePasswordAuthenticationToken(loginRQ.email(), loginRQ.password());
         var auth = this.authManager.authenticate(userPass);
+        User user = (User) auth.getPrincipal();
         var token = tokenService.generateToken((User) auth.getPrincipal());
-        return new LoginRegisterRS(((User) auth.getPrincipal()).getName(), token);
+        return new LoginRegisterRS(user.getId(), user.getName(), token);
     }
 
     @Transactional
@@ -42,7 +43,7 @@ public class AuthService {
         user.setName(registerRQ.name());
         this.repository.save(user);
         String token = this.tokenService.generateToken(user);
-        return new LoginRegisterRS(user.getName(), token);
+        return new LoginRegisterRS(user.getId(), user.getName(), token);
     }
 
 }
