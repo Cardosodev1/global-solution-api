@@ -1,5 +1,7 @@
 package com.global.solution.api.user;
 
+import com.global.solution.api.exception.EmailAlreadyExistsException;
+import com.global.solution.api.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,14 +19,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserRS updateMyProfile(UserUpdateRQ request, User user) {
-        if (request.email() != null && !request.email().equals(user.getEmail())) {
+    public UserRS updateMyProfile(UserUpdateRQ request, User userFromAuth) {
+        User managedUser = repository.findById(userFromAuth.getId()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado na sessão"));
+        if (request.email() != null && !request.email().equals(managedUser.getEmail())) {
             if (repository.findByEmail(request.email()).isPresent()) {
-                throw new RuntimeException("Email já está em uso.");
+                throw new EmailAlreadyExistsException("Email já está em uso");
             }
         }
-        user.update(request, passEncoder);
-        return new UserRS(user);
+        managedUser.update(request, passEncoder);
+        return new UserRS(managedUser);
     }
 
     @Transactional

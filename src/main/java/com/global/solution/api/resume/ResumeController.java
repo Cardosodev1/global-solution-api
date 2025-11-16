@@ -20,7 +20,7 @@ public class ResumeController {
     @PostMapping
     public ResponseEntity<ResumeRS> createResume(@RequestBody @Valid ResumeRQ resumeRQ,
                                                  @AuthenticationPrincipal User user) {
-        ResumeRS resumeRS = service.createResume(resumeRQ,  user);
+        ResumeRS resumeRS = service.createResume(resumeRQ, user);
         return ResponseEntity.ok(resumeRS);
     }
 
