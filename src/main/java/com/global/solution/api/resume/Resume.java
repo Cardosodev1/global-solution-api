@@ -1,5 +1,6 @@
 package com.global.solution.api.resume;
 
+import com.global.solution.api.resume.rqrs.ResumeUpdateRQ;
 import com.global.solution.api.skill.Skill;
 import com.global.solution.api.user.User;
 import jakarta.persistence.*;

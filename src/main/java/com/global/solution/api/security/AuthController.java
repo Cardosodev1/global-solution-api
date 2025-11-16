@@ -1,5 +1,8 @@
 package com.global.solution.api.security;
 
+import com.global.solution.api.security.rqrs.LoginRQ;
+import com.global.solution.api.security.rqrs.LoginRegisterRS;
+import com.global.solution.api.security.rqrs.RegisterRQ;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

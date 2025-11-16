@@ -2,6 +2,7 @@ package com.global.solution.api.skill;
 
 import com.global.solution.api.analysis.AnalysisResult;
 import com.global.solution.api.resume.Resume;
+import com.global.solution.api.skill.enums.Category;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

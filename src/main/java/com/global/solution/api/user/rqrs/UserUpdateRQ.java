@@ -1,4 +1,4 @@
-package com.global.solution.api.user;
+package com.global.solution.api.user.rqrs;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

@@ -2,6 +2,7 @@ package com.global.solution.api.user;
 
 import com.global.solution.api.analysis.JobAnalysis;
 import com.global.solution.api.resume.Resume;
+import com.global.solution.api.user.rqrs.UserUpdateRQ;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;

@@ -1,4 +1,6 @@
-package com.global.solution.api.user;
+package com.global.solution.api.user.rqrs;
+
+import com.global.solution.api.user.User;
 
 import java.time.LocalDateTime;
 

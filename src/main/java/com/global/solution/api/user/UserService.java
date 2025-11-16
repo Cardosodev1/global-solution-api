@@ -2,6 +2,8 @@ package com.global.solution.api.user;
 
 import com.global.solution.api.exception.EmailAlreadyExistsException;
 import com.global.solution.api.exception.ResourceNotFoundException;
+import com.global.solution.api.user.rqrs.UserRS;
+import com.global.solution.api.user.rqrs.UserUpdateRQ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

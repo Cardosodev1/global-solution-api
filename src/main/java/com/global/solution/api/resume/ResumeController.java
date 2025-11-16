@@ -1,5 +1,8 @@
 package com.global.solution.api.resume;
 
+import com.global.solution.api.resume.rqrs.ResumeRQ;
+import com.global.solution.api.resume.rqrs.ResumeRS;
+import com.global.solution.api.resume.rqrs.ResumeUpdateRQ;
 import com.global.solution.api.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.global.solution.api.security;
+package com.global.solution.api.security.rqrs;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

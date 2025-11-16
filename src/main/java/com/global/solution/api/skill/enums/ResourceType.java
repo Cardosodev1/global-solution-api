@@ -1,4 +1,4 @@
-package com.global.solution.api.skill;
+package com.global.solution.api.skill.enums;
 
 public enum ResourceType {
 

@@ -1,4 +1,4 @@
-package com.global.solution.api.resume;
+package com.global.solution.api.resume.rqrs;
 
 import jakarta.validation.constraints.Size;
 

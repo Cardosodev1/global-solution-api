@@ -1,6 +1,9 @@
 package com.global.solution.api.security;
 
 import com.global.solution.api.exception.EmailAlreadyExistsException;
+import com.global.solution.api.security.rqrs.LoginRQ;
+import com.global.solution.api.security.rqrs.LoginRegisterRS;
+import com.global.solution.api.security.rqrs.RegisterRQ;
 import com.global.solution.api.user.User;
 import com.global.solution.api.user.UserRepository;
 import lombok.RequiredArgsConstructor;

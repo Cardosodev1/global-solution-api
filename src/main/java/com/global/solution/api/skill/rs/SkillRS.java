@@ -1,4 +1,7 @@
-package com.global.solution.api.skill;
+package com.global.solution.api.skill.rs;
+
+import com.global.solution.api.skill.Skill;
+import com.global.solution.api.skill.enums.Category;
 
 public record SkillRS(Long id,
                       String name,

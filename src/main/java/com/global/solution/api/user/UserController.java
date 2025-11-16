@@ -1,5 +1,7 @@
 package com.global.solution.api.user;
 
+import com.global.solution.api.user.rqrs.UserRS;
+import com.global.solution.api.user.rqrs.UserUpdateRQ;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
