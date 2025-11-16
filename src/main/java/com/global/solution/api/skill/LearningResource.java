@@ -1,5 +1,7 @@
 package com.global.solution.api.skill;
 
+import com.global.solution.api.skill.enums.DifficultyLevel;
+import com.global.solution.api.skill.enums.ResourceType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
@@ -29,6 +31,10 @@ public class LearningResource {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ResourceType resourceType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DifficultyLevel difficultyLevel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_skill")
