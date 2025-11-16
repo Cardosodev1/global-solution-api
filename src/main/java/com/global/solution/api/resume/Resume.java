@@ -1,5 +1,6 @@
 package com.global.solution.api.resume;
 
+import com.global.solution.api.analysis.JobAnalysis;
 import com.global.solution.api.resume.rqrs.ResumeUpdateRQ;
 import com.global.solution.api.skill.Skill;
 import com.global.solution.api.user.User;
@@ -37,6 +38,9 @@ public class Resume {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "gs_resumes_skills", joinColumns = @JoinColumn(name = "id_resume"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
     private Set<Skill> skills = new HashSet<>();
+
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<JobAnalysis> jobAnalyses = new HashSet<>();
 
     public Resume(String title, String description, User user) {
         this.title = title;

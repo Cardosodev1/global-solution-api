@@ -9,11 +9,10 @@ import java.util.stream.Collectors;
 public record ResumeRS(Long id,
                        String title,
                        String description,
-                       Long idUser,
                        Set<SkillRS> skills) {
 
     public ResumeRS(Resume resume) {
-        this(resume.getId(), resume.getTitle(), resume.getDescription(), resume.getUser().getId(), resume.getSkills()
+        this(resume.getId(), resume.getTitle(), resume.getDescription(), resume.getSkills()
                 .stream()
                 .map(SkillRS::new)
                 .collect(Collectors.toSet())
