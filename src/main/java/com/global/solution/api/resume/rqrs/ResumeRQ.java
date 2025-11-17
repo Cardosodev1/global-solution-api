@@ -6,14 +6,14 @@ import jakarta.validation.constraints.Size;
 
 public record ResumeRQ(
 
-        @NotNull
-        @NotBlank
-        @Size(min = 3, message = "Título deve ter ao menos 3 caracteres")
+        @NotNull(message = "{resume.title.notblank}")
+        @NotBlank(message = "{resume.title.notblank}")
+        @Size(min = 3, message = "{resume.title.size}")
         String title,
 
-        @NotNull
-        @NotBlank
-        @Size(min = 20, message = "Descrição deve ter ao menos 20 caracteres")
+        @NotNull(message = "{resume.description.notblank}")
+        @NotBlank(message = "{resume.description.notblank}")
+        @Size(min = 20, message = "{resume.description.size}")
         String description
 
 ) {

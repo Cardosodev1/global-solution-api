@@ -5,13 +5,13 @@ import jakarta.validation.constraints.Size;
 
 public record UserUpdateRQ(
 
-        @Size(min = 3, message = "Nome deve ter ao menos 3 caracteres")
+        @Size(min = 3, message = "{user.name.size}")
         String name,
 
-        @Email(message = "Email inválido")
+        @Email(message = "{user.email.invalid}")
         String email,
 
-        @Size(min = 8, message = "Senha deve ter ao menos 8 caracteres")
+        @Size(min = 8, message = "{user.password.size}")
         String password
 
 ) {
