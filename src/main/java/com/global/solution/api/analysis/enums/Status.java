@@ -1,4 +1,4 @@
-package com.global.solution.api.analysis;
+package com.global.solution.api.analysis.enums;
 
 public enum Status {
 

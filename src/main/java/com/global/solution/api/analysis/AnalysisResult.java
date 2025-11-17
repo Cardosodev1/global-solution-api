@@ -1,5 +1,6 @@
 package com.global.solution.api.analysis;
 
+import com.global.solution.api.analysis.enums.Status;
 import com.global.solution.api.skill.Skill;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,5 +35,11 @@ public class AnalysisResult {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_job_analysis")
     private JobAnalysis jobAnalysis;
+
+    public AnalysisResult(Status status, Skill skill, JobAnalysis jobAnalysis) {
+        this.status = status;
+        this.skill = skill;
+        this.jobAnalysis = jobAnalysis;
+    }
 
 }

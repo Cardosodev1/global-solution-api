@@ -15,4 +15,9 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
 
     Optional<Resume> findByIdAndUser(Long id, User user);
 
+    @Query("SELECT r FROM Resume r " +
+           "LEFT JOIN FETCH r.skills " +
+           "WHERE r.id = :id AND r.user = :user")
+    Optional<Resume> findByIdAndUserWithSkills(Long id, User user);
+
 }

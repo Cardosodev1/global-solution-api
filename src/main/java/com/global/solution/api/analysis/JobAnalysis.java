@@ -46,4 +46,18 @@ public class JobAnalysis {
     @OneToMany(mappedBy = "jobAnalysis", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<AnalysisResult> analysisResults = new HashSet<>();
 
+    public JobAnalysis(String jobTitle, String jobDescription, User user, Resume resume) {
+        this.jobTitle = jobTitle;
+        this.jobDescription = jobDescription;
+        this.user = user;
+        this.resume = resume;
+    }
+
+    public void setAnalysisResults(Set<AnalysisResult> analysisResults) {
+        this.analysisResults.clear();
+        if (analysisResults != null) {
+            this.analysisResults.addAll(analysisResults);
+        }
+    }
+
 }
