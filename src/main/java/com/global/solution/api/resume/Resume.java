@@ -27,7 +27,7 @@ public class Resume {
     @NotBlank
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4000)
     @NotBlank
     private String description;
 

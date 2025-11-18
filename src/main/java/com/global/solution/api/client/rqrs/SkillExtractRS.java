@@ -9,6 +9,6 @@ import java.util.List;
 @NoArgsConstructor
 public class SkillExtractRS {
 
-    private List<String> skills;
+    private List<String> habilidades;
 
 }

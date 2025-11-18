@@ -85,48 +85,40 @@ public class JobAnalysisService {
     }
 
     private JobAnalysisRS buildJobAnalysisRS(JobAnalysis jobAnalysis) {
-        Set<Skill> matchingSkills = jobAnalysis.getAnalysisResults()
-                .stream()
+        Set<Skill> matchingSkills = jobAnalysis.getAnalysisResults().stream()
                 .filter(ar -> ar.getStatus() == Status.MATCH)
                 .map(AnalysisResult::getSkill)
                 .collect(Collectors.toSet());
 
-        Set<Skill> extraSkills = jobAnalysis.getAnalysisResults()
-                .stream()
+        Set<Skill> extraSkills = jobAnalysis.getAnalysisResults().stream()
                 .filter(ar -> ar.getStatus() == Status.EXTRA)
                 .map(AnalysisResult::getSkill)
                 .collect(Collectors.toSet());
 
-        Set<Skill> missingSkills = jobAnalysis.getAnalysisResults()
-                .stream()
+        Set<Skill> missingSkills = jobAnalysis.getAnalysisResults().stream()
                 .filter(ar -> ar.getStatus() == Status.GAP)
                 .map(AnalysisResult::getSkill)
                 .collect(Collectors.toSet());
 
-        Set<Long> missingSkillIds = missingSkills
-                .stream()
+        Set<Long> missingSkillIds = missingSkills.stream()
                 .map(Skill::getId)
                 .collect(Collectors.toSet());
 
         Set<Skill> missingSkillsWithResources = skillRepository.findByIdWithLearningResources(missingSkillIds);
 
-        Set<SkillRS> matchingSkillsRS = matchingSkills
-                .stream()
+        Set<SkillRS> matchingSkillsRS = matchingSkills.stream()
                 .map(SkillRS::new)
                 .collect(Collectors.toSet());
 
-        Set<SkillRS> extraSkillsRS = extraSkills
-                .stream()
+        Set<SkillRS> extraSkillsRS = extraSkills.stream()
                 .map(SkillRS::new)
                 .collect(Collectors.toSet());
 
-        Set<SkillLearningRS> missingSkillsRS = missingSkillsWithResources
-                .stream()
+        Set<SkillLearningRS> missingSkillsRS = missingSkillsWithResources.stream()
                 .map(SkillLearningRS::new)
                 .collect(Collectors.toSet());
 
-        return new JobAnalysisRS(
-                jobAnalysis.getId(),
+        return new JobAnalysisRS(jobAnalysis.getId(),
                 jobAnalysis.getJobTitle(),
                 jobAnalysis.getJobDescription(),
                 jobAnalysis.getCreatedAt(),

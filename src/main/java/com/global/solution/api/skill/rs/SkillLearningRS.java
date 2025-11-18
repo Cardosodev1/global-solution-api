@@ -12,8 +12,7 @@ public record SkillLearningRS(Long id,
                               Set<LearningResourceRS> learningResources) {
 
     public SkillLearningRS(Skill skill) {
-        this(skill.getId(), skill.getName(), skill.getCategory(), skill.getLearningResources()
-                .stream()
+        this(skill.getId(), skill.getName(), skill.getCategory(), skill.getLearningResources().stream()
                 .map(LearningResourceRS::new)
                 .collect(Collectors.toSet())
         );

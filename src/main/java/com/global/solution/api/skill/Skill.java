@@ -30,6 +30,9 @@ public class Skill {
     @Column(nullable = false)
     private Category category;
 
+    @Column(length = 20)
+    private String acronym;
+
     @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<LearningResource> learningResources = new HashSet<>();
 

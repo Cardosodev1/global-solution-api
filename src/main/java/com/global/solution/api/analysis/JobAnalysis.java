@@ -27,7 +27,7 @@ public class JobAnalysis {
     @NotBlank
     private String jobTitle;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4000)
     @NotBlank
     private String jobDescription;
 

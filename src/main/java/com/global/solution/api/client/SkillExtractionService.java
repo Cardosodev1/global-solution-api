@@ -20,7 +20,7 @@ public class SkillExtractionService {
 
     public Set<Skill> findSkillsFromAI(String textForAnalysis) {
         SkillExtractRS skillExtractRS = skillApiClient.extractSkills(textForAnalysis);
-        List<String> skillNamesFromAI = skillExtractRS.getSkills();
+        List<String> skillNamesFromAI = skillExtractRS.getHabilidades();
         if (skillNamesFromAI == null || skillNamesFromAI.isEmpty()) {
             log.warn("IA não retornou skills para o texto.");
             return Set.of();

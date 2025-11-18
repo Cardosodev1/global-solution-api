@@ -47,14 +47,11 @@ public class ResumeService {
     @Transactional
     public ResumeRS updateMyResume(Long id, ResumeUpdateRQ resumeUpdateRQ, User user) {
         Resume resume = findResumeByIdAndUser(id, user);
-        String oldText = resume.getTitle() + " - " + resume.getDescription();
-
         String newTitle = (resumeUpdateRQ.title() != null) ? resumeUpdateRQ.title() : resume.getTitle();
         String newDesc = (resumeUpdateRQ.description() != null) ? resumeUpdateRQ.description() : resume.getDescription();
         String newText = newTitle + " - " + newDesc;
-
         resume.update(resumeUpdateRQ);
-        if (!oldText.equals(newText)) {
+        if (!resume.getDescription().equals(newDesc)) {
             Set<Skill> skillsFromAI = skillExtractionService.findSkillsFromAI(newText);
             resume.updateSkills(skillsFromAI);
         }
