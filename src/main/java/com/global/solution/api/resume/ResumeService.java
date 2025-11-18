@@ -9,6 +9,8 @@ import com.global.solution.api.skill.Skill;
 import com.global.solution.api.user.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,12 +41,14 @@ public class ResumeService {
         return resumePage.map(ResumeRS::new);
     }
 
+    @Cacheable(value = "resumeById", key = "#id")
     public ResumeRS getMyResumeById(Long id, User user) {
         Resume resume = findResumeByIdAndUser(id, user);
         return new ResumeRS(resume);
     }
 
     @Transactional
+    @CacheEvict(value = "resumeById", key = "#id")
     public ResumeRS updateMyResume(Long id, ResumeUpdateRQ resumeUpdateRQ, User user) {
         Resume resume = findResumeByIdAndUser(id, user);
         String newTitle = (resumeUpdateRQ.title() != null) ? resumeUpdateRQ.title() : resume.getTitle();
@@ -59,6 +63,7 @@ public class ResumeService {
     }
 
     @Transactional
+    @CacheEvict(value = "resumeById", key = "#id")
     public void deleteMyResume(Long id, User user) {
         Resume resume = findResumeByIdAndUser(id, user);
         resumeRepository.delete(resume);
