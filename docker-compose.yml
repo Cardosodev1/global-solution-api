@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    image: global-solution-api:latest
+    container_name: global_solution_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file:
+      - .env
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET}
+      DB_ORACLE: ${DB_ORACLE}
+      DB_PASSWORD: ${DB_PASSWORD}
+      API_KEY: ${API_KEY}
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_broker
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_listener"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    restart: always
