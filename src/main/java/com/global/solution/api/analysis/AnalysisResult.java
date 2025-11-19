@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "gs_analysis_results")
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AnalysisResult {
 
     @Id
@@ -30,6 +30,7 @@ public class AnalysisResult {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_skill")
+    @EqualsAndHashCode.Include
     private Skill skill;
 
     @ManyToOne(fetch = FetchType.LAZY)
