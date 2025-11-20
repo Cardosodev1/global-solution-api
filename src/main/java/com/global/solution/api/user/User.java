@@ -1,5 +1,6 @@
 package com.global.solution.api.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.global.solution.api.analysis.JobAnalysis;
 import com.global.solution.api.resume.Resume;
 import com.global.solution.api.user.rqrs.UserUpdateRQ;
@@ -49,9 +50,11 @@ public class User implements UserDetails {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Resume> resumes = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<JobAnalysis> jobAnalyses = new HashSet<>();
 
     public User(String name, String email, String encodedPass) {

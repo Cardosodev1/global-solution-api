@@ -1,5 +1,6 @@
 package com.global.solution.api.analysis;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.global.solution.api.analysis.enums.Status;
 import com.global.solution.api.skill.Skill;
 import jakarta.persistence.*;
@@ -35,6 +36,7 @@ public class AnalysisResult {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_job_analysis")
+    @JsonIgnore
     private JobAnalysis jobAnalysis;
 
     public AnalysisResult(Status status, Skill skill, JobAnalysis jobAnalysis) {

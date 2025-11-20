@@ -1,5 +1,6 @@
 package com.global.solution.api.skill;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.global.solution.api.analysis.AnalysisResult;
 import com.global.solution.api.resume.Resume;
 import com.global.solution.api.skill.enums.Category;
@@ -37,9 +38,11 @@ public class Skill {
     private Set<LearningResource> learningResources = new HashSet<>();
 
     @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<AnalysisResult> analysisResults = new HashSet<>();
 
     @ManyToMany(mappedBy = "skills")
+    @JsonIgnore
     private Set<Resume> resumes =  new HashSet<>();
 
 }

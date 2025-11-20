@@ -3,6 +3,7 @@ package com.global.solution.api.analysis;
 import com.global.solution.api.analysis.rqrs.JobAnalysisListRS;
 import com.global.solution.api.analysis.rqrs.JobAnalysisRQ;
 import com.global.solution.api.analysis.rqrs.JobAnalysisRS;
+import com.global.solution.api.analysis.rqrs.JobAnalysisStatusRS;
 import com.global.solution.api.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,10 @@ public class JobAnalysisController {
     private final JobAnalysisService service;
 
     @PostMapping
-    public ResponseEntity<JobAnalysisRS> createJobAnalysis(@RequestBody @Valid JobAnalysisRQ jobAnalysisRQ,
+    public ResponseEntity<JobAnalysisStatusRS> createJobAnalysis(@RequestBody @Valid JobAnalysisRQ jobAnalysisRQ,
                                                            @AuthenticationPrincipal User user) {
-        JobAnalysisRS analysisRS = service.createJobAnalysis(jobAnalysisRQ, user);
-        return ResponseEntity.ok(analysisRS);
+        JobAnalysisStatusRS analysisStatusRS = service.createJobAnalysis(jobAnalysisRQ, user);
+        return ResponseEntity.ok(analysisStatusRS);
     }
 
     @GetMapping

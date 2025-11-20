@@ -1,5 +1,6 @@
 package com.global.solution.api.resume;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.global.solution.api.analysis.JobAnalysis;
 import com.global.solution.api.resume.rqrs.ResumeUpdateRQ;
 import com.global.solution.api.skill.Skill;
@@ -33,6 +34,7 @@ public class Resume {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
+    @JsonIgnore
     private User user;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -40,6 +42,7 @@ public class Resume {
     private Set<Skill> skills = new HashSet<>();
 
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<JobAnalysis> jobAnalyses = new HashSet<>();
 
     public Resume(String title, String description, User user) {

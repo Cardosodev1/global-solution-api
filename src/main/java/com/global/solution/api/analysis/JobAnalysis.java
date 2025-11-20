@@ -1,5 +1,7 @@
 package com.global.solution.api.analysis;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.global.solution.api.analysis.enums.JobAnalysisStatus;
 import com.global.solution.api.resume.Resume;
 import com.global.solution.api.user.User;
 import jakarta.persistence.*;
@@ -31,16 +33,23 @@ public class JobAnalysis {
     @NotBlank
     private String jobDescription;
 
+    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JobAnalysisStatus processingStatus;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
+    @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_resume")
+    @JsonIgnore
     private Resume resume;
 
     @OneToMany(mappedBy = "jobAnalysis", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -51,6 +60,7 @@ public class JobAnalysis {
         this.jobDescription = jobDescription;
         this.user = user;
         this.resume = resume;
+        this.processingStatus = JobAnalysisStatus.PENDING;
     }
 
     public void setAnalysisResults(Set<AnalysisResult> analysisResults) {

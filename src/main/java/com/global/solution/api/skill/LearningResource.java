@@ -1,5 +1,6 @@
 package com.global.solution.api.skill;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.global.solution.api.skill.enums.DifficultyLevel;
 import com.global.solution.api.skill.enums.ResourceType;
 import jakarta.persistence.*;
@@ -38,6 +39,7 @@ public class LearningResource {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_skill")
+    @JsonIgnore
     private Skill skill;
 
 }
