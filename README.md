@@ -105,3 +105,31 @@ A API estará disponível em: http://localhost:8080/api/v1
 4. Aguarde alguns segundos (processamento da fila) e consulte o ID da análise.
 
 5. Verifique se o status mudou de PENDING para COMPLETED e veja as recomendações de estudo.
+
+## 📋 Exemplos de CRUD (JSON)
+
+### Cadastrar Usuário (POST /auth/register)
+```json
+{
+  "name": "Nome Sobrenome",
+  "email": "nome.sobrenome@email.com",
+  "password": "NomeSobrenome123#"
+}
+```
+
+### Criar Currículo (POST /resume)
+```json
+{
+  "title": "Currículo de Dev Python",
+  "description": "Desenvolvedor Python Pleno com 3 anos de experiência em backend, focado na construção de APIs RESTful escaláveis e microsserviços. Especialista em Django, Flask e FastAPI, com forte conhecimento em bancos de dados (PostgreSQL, Redis) e práticas de DevOps (Docker, CI/CD). COMPETÊNCIAS PRINCIPAIS Python: Django, Flask, FastAPI, Celery, Pytest Bancos de Dados: PostgreSQL, MySQL, Redis, MongoDBb DevOps & Ferramentas: Docker, Git, CI/CD (GitHub Actions/GitLab), Linux Conceitos: APIs RESTful, Microsserviços, Metodologias Ágeis EXPERIÊNCIA PROFISSIONAL Desenvolvedor Python Pleno Empresa Tech Solutions S.A. | (Mês 2024 – Presente) Liderei o desenvolvimento de microsserviços em Flask e Django REST Framework, melhorando a performance de consultas (PostgreSQL) e implementando filas assíncronas com Celery, resultando em ganhos significativos de performance. Arquitetura e manutenção de APIs RESTful para consumo interno (React) e parceiros. Gerenciamento do ciclo de vida das aplicações com Docker e pipelines de CI/CD (GitLab CI). Desenvolvedor Python Júnior Inova Web Studio | (Mês 2022 – Mês 2023) Desenvolvi e mantive um CMS proprietário em Django, implementando novas funcionalidades e testes unitários (Pytest). Integrei APIs de terceiros (pagamentos e logística) e criei scripts de automação para migração de dados. IDIOMAS Português: Nativo Inglês: Intermediário"
+}
+```
+
+### Criar Análise (POST /analysis)
+```json
+{
+  "jobTitle": "Vaga para Desenvolvedor Python Pleno",
+  "jobDescription": "Desenvolvedor(a) Python Pleno (Backend) - Estamos em busca de um(a) Desenvolvedor(a) Python Pleno para integrar nosso time de tecnologia. Se você é apaixonado por escrever código limpo, performático e gosta de resolver problemas complexos com autonomia, essa oportunidade é para você. O Desafio: Você atuará diretamente no desenvolvimento e evolução de nossas APIs e microsserviços, garantindo escalabilidade e segurança. Buscamos alguém que já superou a fase básica da programação e hoje se preocupa com arquitetura, performance e boas práticas de engenharia de software (Clean Code e SOLID). Você trabalhará em um ambiente colaborativo, participando de code reviews e decisões técnicas junto com o time de Produto. Principais Responsabilidades: Desenvolver e manter aplicações backend utilizando Python (3.x). Projetar e implementar APIs RESTful robustas. Criar testes automatizados (unitários e de integração) para garantir a qualidade das entregas. Otimizar consultas em bancos de dados relacionais. Atuar na containerização de aplicações e pipelines de deploy. O que buscamos (Requisitos): Experiência sólida comprovada com Python e frameworks web modernos (Django, FastAPI ou Flask). Domínio de Bancos de Dados Relacionais (PostgreSQL ou MySQL) e SQL. Experiência com Docker e Docker Compose. Conhecimento profundo de Git e fluxos de versionamento. Familiaridade com filas/mensageria (RabbitMQ, Redis ou Kafka) é um diferencial. Vivência com serviços de Cloud (AWS, Azure ou GCP) será muito bem-vinda. O que oferecemos: Trabalhamos com regime de contratação [CLT/PJ] com salário competitivo, horário flexível e benefícios principais VR, Plano de Saúde, Gympass. Nosso ambiente é focado no aprendizado contínuo e no equilíbrio entre vida pessoal e trabalho. Como se candidatar: Envie seu currículo (ou link do LinkedIn/GitHub) para [email@suaempresa.com.br] com o assuntoVaga Python Pleno - [Seu Nome]. Venha construir o futuro conosco.",
+  "idResume": 5
+}
+```
