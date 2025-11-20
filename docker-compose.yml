@@ -37,6 +37,8 @@ services:
       interval: 5s
       timeout: 2s
       retries: 5
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
   redis:
     image: redis:6.2-alpine
@@ -44,3 +46,9 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    volumes:
+      - redis_data:/data
+
+volumes:
+  rabbitmq_data:
+  redis_data:
