@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
     image: global-solution-api:latest
     container_name: global_solution_api
     ports:
