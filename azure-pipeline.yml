@@ -1,0 +1,144 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  acrName: 'acrglobalsolutionRM555178'
+  imageName: 'global-solution-api'
+  resourceGroup: 'rg-global-solution-2025'
+  containerGroupName: 'aci-global-solution'
+  dockerRegistryServiceConnection: 'ScConnectionToACR'
+  azureSubscription: 'AzureConnection'
+
+stages:
+  - stage: Build
+    displayName: Build & Test Stage
+    jobs:
+      - job: BuildAndTest
+        displayName: Build Maven & Docker
+        steps:
+          - task: Maven@3
+            displayName: 'Maven Test'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'test'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.21'
+              mavenVersionOption: 'Default'
+          - task: Docker@2
+            displayName: 'Build and Push Docker Image'
+            inputs:
+              command: buildAndPush
+              repository: $(imageName)
+              dockerfile: 'dockerfiles/Dockerfile'
+              containerRegistry: $(dockerRegistryServiceConnection)
+              buildContext: '.'
+              tags: |
+                $(Build.BuildId)
+                latest
+          - task: CopyFiles@2
+            displayName: 'Copy Scripts'
+            inputs:
+              SourceFolder: 'scripts'
+              Contents: '**'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/scripts'
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifacts'
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
+  - stage: Deploy
+    displayName: Release to Cloud (ACI)
+    dependsOn: Build
+    condition: succeeded()
+    jobs:
+      - job: DeployToACI
+        displayName: Deploy Container Group
+        steps:
+          - download: current
+            artifact: drop
+          - task: AzureCLI@2
+            displayName: 'Execute Infra Script'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: 'bash'
+              scriptLocation: 'scriptPath'
+              scriptPath: '$(Pipeline.Workspace)/drop/scripts/script-infra.sh'
+          - task: AzureCLI@2
+            displayName: 'Deploy to Azure Container Instances'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                echo "Iniciando Deploy no ACI..."
+                ACR_USERNAME=$(az acr credential show --name $(acrName) --query "username" -o tsv)
+                ACR_PASSWORD=$(az acr credential show --name $(acrName) --query "passwords[0].value" -o tsv)
+                cat <<EOF > deploy-aci.yaml
+                apiVersion: 2019-12-01
+                location: eastus
+                name: $(containerGroupName)
+                properties:
+                  containers:
+                  - name: api-container
+                    properties:
+                      image: $(acrName).azurecr.io/$(imageName):$(Build.BuildId)
+                      ports:
+                      - port: 8080
+                      resources:
+                        requests:
+                          cpu: 1.0
+                          memoryInGB: 1.5
+                      environmentVariables:
+                      - name: DB_ORACLE
+                        secureValue: '$(DB_ORACLE)'
+                      - name: DB_PASSWORD
+                        secureValue: '$(DB_PASSWORD)'
+                      - name: API_KEY
+                        secureValue: '$(API_KEY)'
+                      - name: JWT_SECRET
+                        secureValue: '$(JWT_SECRET)'
+                      - name: SPRING_RABBITMQ_HOST
+                        value: localhost
+                      - name: SPRING_DATA_REDIS_HOST
+                        value: localhost
+                  - name: redis-sidecar
+                    properties:
+                      image: redis:6.2-alpine
+                      resources:
+                        requests:
+                          cpu: 0.5
+                          memoryInGB: 0.5
+                  - name: rabbitmq-sidecar
+                    properties:
+                      image: rabbitmq:3-management
+                      ports:
+                      - port: 15672
+                      resources:
+                        requests:
+                          cpu: 0.5
+                          memoryInGB: 1.0
+                  osType: Linux
+                  restartPolicy: Always
+                  imageRegistryCredentials:
+                  - server: $(acrName).azurecr.io
+                    username: $ACR_USERNAME
+                    password: $ACR_PASSWORD
+                  ipAddress:
+                    type: Public
+                    ports:
+                    - protocol: tcp
+                      port: 8080
+                    - protocol: tcp
+                      port: 15672
+                    dnsNameLabel: gs-api-$(Build.BuildId)
+                EOF
+                echo "Arquivo YAML de deploy gerado. Aplicando no Azure..."
+                az container create --resource-group $(resourceGroup) --file deploy-aci.yaml
+                echo "Deploy concluído!"
+                echo "Acesse sua API em: http://gs-api-$(Build.BuildId).eastus.azurecontainer.io:8080/api/v1"
