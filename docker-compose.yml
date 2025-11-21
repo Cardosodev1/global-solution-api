@@ -10,6 +10,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - postgres
       - rabbitmq
       - redis
     env_file:
@@ -19,10 +20,25 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       JWT_SECRET: ${JWT_SECRET}
-      DB_ORACLE: ${DB_ORACLE}
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: globalsolutiondb
+      DB_USERNAME: gsuser
       DB_PASSWORD: ${DB_PASSWORD}
       API_KEY: ${API_KEY}
     restart: always
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: globalsolutiondb
+      POSTGRES_USER: gsuser
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -52,5 +68,6 @@ services:
       - redis_data:/data
 
 volumes:
+  postgres_data:
   rabbitmq_data:
   redis_data:
