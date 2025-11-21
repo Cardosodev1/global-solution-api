@@ -11,6 +11,8 @@ variables:
   containerGroupName: 'aci-global-solution'
   dockerRegistryServiceConnection: 'ScConnectionToACR'
   azureSubscription: 'AzureConnection'
+  postgresDbName: 'globalsolutiondb'
+  postgresUser: 'gsuser'
 
 stages:
   - stage: Build
@@ -96,8 +98,12 @@ stages:
                           cpu: 1.0
                           memoryInGB: 1.5
                       environmentVariables:
-                      - name: DB_ORACLE
-                        secureValue: '$(DB_ORACLE)'
+                      - name: POSTGRES_HOST
+                        value: localhost
+                      - name: POSTGRES_DB
+                        value: $(postgresDbName)
+                      - name: DB_USERNAME
+                        value: $(postgresUser)
                       - name: DB_PASSWORD
                         secureValue: '$(DB_PASSWORD)'
                       - name: API_KEY
@@ -108,6 +114,22 @@ stages:
                         value: localhost
                       - name: SPRING_DATA_REDIS_HOST
                         value: localhost
+                  - name: postgres-db-sidecar
+                    properties:
+                      image: postgres:15-alpine
+                      ports:
+                      - port: 5432
+                      resources:
+                        requests:
+                          cpu: 0.5
+                          memoryInGB: 0.5
+                      environmentVariables:
+                      - name: POSTGRES_DB
+                        value: $(postgresDbName)
+                      - name: POSTGRES_USER
+                        value: $(postgresUser)
+                      - name: POSTGRES_PASSWORD
+                        secureValue: '$(DB_PASSWORD)'
                   - name: redis-sidecar
                     properties:
                       image: redis:6.2-alpine
