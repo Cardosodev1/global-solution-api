@@ -14,7 +14,6 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
     List<Skill> findByNameIn(Collection<String> names);
 
     @Query("SELECT s FROM Skill s LEFT JOIN FETCH s.learningResources WHERE s.id IN :skillIds")
-    @Cacheable("skillsWithResources")
     Set<Skill> findByIdWithLearningResources(Set<Long> skillIds);
 
 }
