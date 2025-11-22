@@ -116,7 +116,7 @@ stages:
                         value: localhost
                   - name: postgres-db-sidecar
                     properties:
-                      image: postgres:15-alpine
+                      image: $(acrName).azurecr.io/postgres:15-alpine
                       ports:
                       - port: 5432
                       resources:
@@ -132,14 +132,14 @@ stages:
                         secureValue: '$(DB_PASSWORD)'
                   - name: redis-sidecar
                     properties:
-                      image: redis:6.2-alpine
+                      image: $(acrName).azurecr.io/redis:6.2-alpine
                       resources:
                         requests:
                           cpu: 0.5
                           memoryInGB: 0.5
                   - name: rabbitmq-sidecar
                     properties:
-                      image: rabbitmq:3-management
+                      image: $(acrName).azurecr.io/rabbitmq:3-management
                       ports:
                       - port: 15672
                       resources:
