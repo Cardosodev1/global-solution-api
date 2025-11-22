@@ -1,7 +1,7 @@
 # Variáveis
 RESOURCE_GROUP="rg-global-solution-2025"
 LOCATION="eastus"
-ACR_NAME="acrglobalsolutionRM555178"
+ACR_NAME="acrglobalsolutionrm556715"
 ACI_NAME="aci-global-solution"
 
 # 1. Criar Grupo de Recursos
@@ -13,7 +13,7 @@ echo "Criando ACR: $ACR_NAME..."
 az acr create --resource-group $RESOURCE_GROUP --name $ACR_NAME --sku Basic --admin-enabled true
 
 echo "Infraestrutura de Registry criada."
-echo "O Azure Container Instance (ACI) será provisionado dinamicamente via Pipeline."
+echo "O Azure Container Instance (ACI) será provisionado pela Pipeline."
 
 # 4. Exibir credenciais
 echo "------------------------------------------------"
