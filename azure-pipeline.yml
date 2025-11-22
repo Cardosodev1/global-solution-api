@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  acrName: 'acrglobalsolutionRM555178'
+  acrName: 'acrglobalsolutionrm556715'
   imageName: 'global-solution-api'
   resourceGroup: 'rg-global-solution-2025'
   containerGroupName: 'aci-global-solution'
@@ -15,23 +15,27 @@ variables:
   postgresUser: 'gsuser'
 
 stages:
+  # CI
   - stage: Build
     displayName: Build & Test Stage
     jobs:
       - job: BuildAndTest
         displayName: Build Maven & Docker
         steps:
+          # compilar e testar
           - task: Maven@4
-            displayName: 'Maven Test'
+            displayName: 'Maven Test & Package'
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'test'
+              goals: 'package'
               options: '-Dmaven.test.failure.ignore=true'
               publishJUnitResults: true
               testResultsFiles: '**/surefire-reports/TEST-*.xml'
               javaHomeOption: 'JDKVersion'
-              jdkVersionOption: '1.21'
+              jdkVersionOption: 'default'
               mavenVersionOption: 'Default'
+
+          # publicar imagem no ACR
           - task: Docker@2
             displayName: 'Build and Push Docker Image'
             inputs:
@@ -43,18 +47,23 @@ stages:
               tags: |
                 $(Build.BuildId)
                 latest
+
+          # scripts de deploy
           - task: CopyFiles@2
             displayName: 'Copy Scripts'
             inputs:
               SourceFolder: 'scripts'
               Contents: '**'
               TargetFolder: '$(Build.ArtifactStagingDirectory)/scripts'
+
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Artifacts'
             inputs:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
+
+  # CD
   - stage: Deploy
     displayName: Release to Cloud (ACI)
     dependsOn: Build
@@ -65,6 +74,7 @@ stages:
         steps:
           - download: current
             artifact: drop
+
           - task: AzureCLI@2
             displayName: 'Execute Infra Script'
             inputs:
@@ -72,6 +82,7 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'scriptPath'
               scriptPath: '$(Pipeline.Workspace)/drop/scripts/script-infra.sh'
+
           - task: AzureCLI@2
             displayName: 'Deploy to Azure Container Instances'
             inputs:
@@ -80,14 +91,19 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                 echo "Iniciando Deploy no ACI..."
+
+                # ACR credentials
                 ACR_USERNAME=$(az acr credential show --name $(acrName) --query "username" -o tsv)
                 ACR_PASSWORD=$(az acr credential show --name $(acrName) --query "passwords[0].value" -o tsv)
+
+                # Gerando o YAML dinamicamente
                 cat <<EOF > deploy-aci.yaml
                 apiVersion: 2019-12-01
                 location: eastus
                 name: $(containerGroupName)
                 properties:
                   containers:
+                  # app Java 
                   - name: api-container
                     properties:
                       image: $(acrName).azurecr.io/$(imageName):$(Build.BuildId)
@@ -114,6 +130,8 @@ stages:
                         value: localhost
                       - name: SPRING_DATA_REDIS_HOST
                         value: localhost
+
+                  # Postgres 
                   - name: postgres-db-sidecar
                     properties:
                       image: $(acrName).azurecr.io/postgres:15-alpine
@@ -130,6 +148,8 @@ stages:
                         value: $(postgresUser)
                       - name: POSTGRES_PASSWORD
                         secureValue: '$(DB_PASSWORD)'
+
+                  # redis 
                   - name: redis-sidecar
                     properties:
                       image: $(acrName).azurecr.io/redis:6.2-alpine
@@ -137,6 +157,8 @@ stages:
                         requests:
                           cpu: 0.5
                           memoryInGB: 0.5
+
+                  # Rabbitmq 
                   - name: rabbitmq-sidecar
                     properties:
                       image: $(acrName).azurecr.io/rabbitmq:3-management
@@ -146,6 +168,7 @@ stages:
                         requests:
                           cpu: 0.5
                           memoryInGB: 1.0
+
                   osType: Linux
                   restartPolicy: Always
                   imageRegistryCredentials:
@@ -159,9 +182,13 @@ stages:
                       port: 8080
                     - protocol: tcp
                       port: 15672
+                    - protocol: tcp
+                      port: 5432
                     dnsNameLabel: gs-api-$(Build.BuildId)
                 EOF
+
                 echo "Arquivo YAML de deploy gerado. Aplicando no Azure..."
                 az container create --resource-group $(resourceGroup) --file deploy-aci.yaml
+
                 echo "Deploy concluído!"
                 echo "Acesse sua API em: http://gs-api-$(Build.BuildId).eastus.azurecontainer.io:8080/api/v1"
